@@ -3,607 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自動化提案進階 ROI 試算器</title>
-    <!-- 引入 Google Fonts 提升排版質感 -->
+    <title>Prompt 黃金公式組合台</title>
+    <!-- 載入 Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* 設計語彙與變數設定 */
         :root {
-            --primary-color: #6b7fa3;       /* 霧藍 */
-            --primary-hover: #56698c;       /* 霧藍深色版 */
-            --bg-color: #f5f3ee;            /* 米白 */
-            --card-bg: #ffffff;             /* 純白卡片 */
-            --text-color: #2c3e50;          /* 內文深灰 */
-            --text-muted: #7f8c8d;          /* 提示淺灰 */
-            --border-color: #dcd6cd;        /* 邊框淺灰 */
-            --accent-color: #e74c3c;        /* 警示紅 */
-            --success-color: #27ae60;       /* 成功綠 */
-            --warning-color: #f39c12;       /* 警告黃 */
+            --bg-color: #f5f3ee;
+            --card-bg: #ffffff;
+            --border-color: #d8d4cb;
+            --primary-color: #b5703a;
+            --result-bg: #2c2b28;
+            --result-text: #f5f3ee;
+            --placeholder-color: #a09a8e;
+            --radius: 6px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Noto Sans TC', sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Noto Sans TC', sans-serif;
+            color: #4a453e;
             line-height: 1.6;
+            padding: 40px 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px 10px;
         }
 
-        /* 容器設計 */
         .container {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            max-width: 800px;
             width: 100%;
-            max-width: 640px;
-            padding: 30px 25px;
-            border: 1px solid var(--border-color);
-            margin: 20px auto;
         }
 
-        /* 標題與說明 */
-        .header {
+        h1 {
+            font-family: 'Shippori Mincho', serif;
             text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .header h1 {
             color: var(--primary-color);
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            letter-spacing: 0.1em;
         }
 
-        .header p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-bottom: 30px;
         }
 
-        /* 參數說明面板 */
-        .params-panel {
-            background-color: #faf8f5;
-            border-left: 4px solid var(--primary-color);
-            padding: 12px 15px;
-            margin-bottom: 25px;
-            border-radius: 0 8px 8px 0;
-            font-size: 0.85rem;
-            color: #5d6d7e;
-        }
-
-        /* 網格輸入欄位 */
-        .input-grid {
+        .grid-layout {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px 20px;
-            margin-bottom: 25px;
+            gap: 24px;
+            margin-bottom: 30px;
         }
 
-        @media (max-width: 480px) {
-            .input-grid {
+        /* 響應式：手機版改為單欄 */
+        @media (max-width: 600px) {
+            .grid-layout {
                 grid-template-columns: 1fr;
-                gap: 15px;
             }
         }
 
-        /* 表單元素 */
         .form-group {
             display: flex;
             flex-direction: column;
         }
 
-        .form-group label {
-            font-weight: 500;
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-            color: #34495e;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 45px 10px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+        .label {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #2c2b28;
             font-size: 0.95rem;
-            color: var(--text-color);
-            transition: border-color 0.2s, box-shadow 0.2s;
-            outline: none;
-            background-color: #fafbfc;
         }
 
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(107, 127, 163, 0.15);
-            background-color: #ffffff;
-        }
-
-        .unit {
-            position: absolute;
-            right: 14px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            pointer-events: none;
-        }
-
-        /* 按鈕設計 */
-        .btn-calc {
+        textarea {
             width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        textarea::placeholder {
+            color: var(--placeholder-color);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-combine {
             background-color: var(--primary-color);
-            color: #ffffff;
+            color: white;
             border: none;
-            border-radius: 8px;
-            padding: 14px;
+            padding: 14px 40px;
+            border-radius: var(--radius);
             font-size: 1.1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(107, 127, 163, 0.2);
+            transition: opacity 0.2s;
+            font-family: 'Noto Sans TC', sans-serif;
         }
 
-        .btn-calc:hover {
-            background-color: var(--primary-hover);
+        .btn-combine:hover {
+            opacity: 0.9;
         }
 
-        .btn-calc:active {
-            transform: scale(0.98);
+        .btn-combine:active {
+            transform: translateY(1px);
         }
 
-        /* 輸出區設計 */
-        .output-card {
-            border-top: 2px dashed var(--border-color);
-            padding-top: 25px;
+        .result-section {
+            display: none; /* 初始隱藏 */
+            animation: fadeIn 0.4s ease-out;
         }
 
-        .output-card h2 {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 錯誤提示 */
-        .error-message {
-            color: var(--text-muted);
-            text-align: center;
-            font-size: 0.95rem;
-            padding: 30px 0;
-            font-style: italic;
-        }
-
-        /* 卡片三欄排版 */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        @media (max-width: 560px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-        }
-
-        .stat-card {
-            background: #faf8f5;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px 10px;
-            text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .stat-title {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .stat-val {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-color);
-            word-break: break-word;
-        }
-
-        .stat-val.highlight {
-            color: var(--primary-color);
-        }
-
-        /* 主管摘要 */
-        .summary-section {
-            background-color: #f0f4f8;
-            border-left: 4px solid var(--primary-color);
-            border-radius: 4px 8px 8px 4px;
-            padding: 20px;
-            margin-top: 15px;
-            position: relative;
-        }
-
-        .summary-header {
+        .result-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
-        .summary-title {
+        .result-title {
+            font-family: 'Shippori Mincho', serif;
             font-weight: 700;
-            color: #435470;
+            font-size: 1.2rem;
+        }
+
+        .result-box-container {
+            position: relative;
+        }
+
+        .result-box {
+            background-color: var(--result-bg);
+            color: var(--result-text);
+            padding: 24px;
+            border-radius: var(--radius);
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Consolas', 'Monaco', monospace;
             font-size: 0.95rem;
+            min-height: 100px;
+            line-height: 1.7;
         }
 
         .btn-copy {
-            background-color: #ffffff;
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 4px 10px;
+            background-color: #4a453e;
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
             border-radius: 4px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .btn-copy:hover {
-            background-color: var(--primary-color);
-            color: #ffffff;
+            background-color: #5e584f;
         }
 
-        .summary-body {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: #2c3e50;
-            white-space: pre-wrap; /* 保持換行格式 */
-        }
-
-        /* 回饋浮窗 */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background-color: rgba(44, 62, 80, 0.9);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            pointer-events: none;
+        .copy-status {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            margin-left: 10px;
             opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
+        .copy-status.visible {
             opacity: 1;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- 標題 -->
-        <div class="header">
-            <h1>自動化提案 ROI 試算器</h1>
-            <p>考量返工成本、自動化後抽查機制，提供主管決策最精準的 ROI 報告</p>
+<div class="container">
+    <h1>Prompt 黃金公式組合台</h1>
+
+    <div class="card">
+        <div class="grid-layout">
+            <div class="form-group">
+                <label class="label" for="role">① 角色 (Role)</label>
+                <textarea id="role" placeholder="例如：你是一位資深的行銷顧問，擅長撰寫吸引人的社群文案..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="label" for="task">② 任務 (Task)</label>
+                <textarea id="task" placeholder="例如：請幫我針對「新款環保咖啡杯」撰寫三組 Facebook 貼文文案..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="label" for="constraint">③ 限制 (Constraint)</label>
+                <textarea id="constraint" placeholder="例如：每則不超過 200 字、語氣要親切幽默、必須包含三個表情符號..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="label" for="format">④ 呈現 (Format)</label>
+                <textarea id="format" placeholder="例如：請使用條列式呈現，並在結尾加上適當的標籤（Hashtags）..."></textarea>
+            </div>
         </div>
 
-        <!-- 參數說明面板 -->
-        <div class="params-panel">
-            <strong>系統進階邏輯：</strong><br>
-            • 自動化後，預設需配套 <strong>10% 人工抽查</strong>（複核）機制。<br>
-            • 每月省下工時將依 <strong>1 工作天 = 8 小時</strong> 折算。
-        </div>
-
-        <!-- 輸入欄位 -->
-        <form id="roiForm" onsubmit="return false;">
-            <div class="input-grid">
-                
-                <div class="form-group">
-                    <label for="monthlyCases">每月案件數</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="monthlyCases" class="form-control" value="1200" min="0" required placeholder="例如: 1200">
-                        <span class="unit">件</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="minsPerCase">每件人工處理時間</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="minsPerCase" class="form-control" value="3" min="0" step="any" required placeholder="例如: 3">
-                        <span class="unit">分鐘</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="hourlyRate">執行者時薪</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="hourlyRate" class="form-control" value="250" min="0" required placeholder="例如: 250">
-                        <span class="unit">TWD</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="currentErrorRate">目前錯誤率</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="currentErrorRate" class="form-control" value="8" min="0" max="100" step="any" required placeholder="例如: 8">
-                        <span class="unit">%</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="reworkMins">每次錯誤返工時間</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="reworkMins" class="form-control" value="5" min="0" step="any" required placeholder="例如: 5">
-                        <span class="unit">分鐘</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="newErrorRate">自動化預估錯誤率</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="newErrorRate" class="form-control" value="15" min="0" max="100" step="any" required placeholder="例如: 15">
-                        <span class="unit">%</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="monthlyToolFee">每月工具費</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="monthlyToolFee" class="form-control" value="800" min="0" required placeholder="例如: 800">
-                        <span class="unit">TWD</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="setupHours">一次性建置工時</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="setupHours" class="form-control" value="12" min="0" required placeholder="例如: 12">
-                        <span class="unit">小時</span>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- 全寬計算按鈕 -->
-            <button type="button" id="btnCalculate" class="btn-calc">開始試算 ROI</button>
-        </form>
-
-        <!-- 輸出區 -->
-        <div class="output-card">
-            <h2>試算分析結果</h2>
-            
-            <!-- 錯誤提示區 -->
-            <div id="errorBox" class="error-message">
-                請檢查欄位是否都填了數字
-            </div>
-
-            <!-- 計算結果展示區 -->
-            <div id="resultArea" style="display: none;">
-                
-                <!-- 三張卡片 -->
-                <div class="cards-grid">
-                    <div class="stat-card">
-                        <div class="stat-title">每月節省成本</div>
-                        <div class="stat-val highlight" id="savedCost">TWD 0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-title">回本所需時間</div>
-                        <div class="stat-val" id="paybackPeriod">0 個月</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-title">每月省下工時</div>
-                        <div class="stat-val" id="savedHours">0 天</div>
-                    </div>
-                </div>
-
-                <!-- 主管摘要 -->
-                <div class="summary-section">
-                    <div class="summary-header">
-                        <span class="summary-title">📝 主管摘要報告（一鍵複製）</span>
-                        <button type="button" class="btn-copy" id="btnCopy">複製文字</button>
-                    </div>
-                    <div class="summary-body" id="summaryText">建議 [載入中]...</div>
-                </div>
-
-            </div>
+        <div class="btn-container">
+            <button class="btn-combine" onclick="combinePrompt()">組合成完整 Prompt</button>
         </div>
     </div>
 
-    <!-- 複製成功提示 -->
-    <div id="toast" class="toast">已複製到剪貼簿！</div>
+    <div id="resultSection" class="result-section">
+        <div class="result-header">
+            <span class="result-title">組合結果</span>
+            <div style="display: flex; align-items: center;">
+                <span id="copyStatus" class="copy-status">已複製！</span>
+                <button class="btn-copy" onclick="copyToClipboard()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    複製內容
+                </button>
+            </div>
+        </div>
+        <div class="result-box-container">
+            <div id="resultBox" class="result-box"></div>
+        </div>
+    </div>
+</div>
 
-    <script>
-        // DOM 元素繫結
-        const btnCalculate = document.getElementById('btnCalculate');
-        const errorBox = document.getElementById('errorBox');
-        const resultArea = document.getElementById('resultArea');
-        const btnCopy = document.getElementById('btnCopy');
-        const toast = document.getElementById('toast');
+<script>
+    function combinePrompt() {
+        const role = document.getElementById('role').value.trim();
+        const task = document.getElementById('task').value.trim();
+        const constraint = document.getElementById('constraint').value.trim();
+        const format = document.getElementById('format').value.trim();
 
-        // 千分位格式化函數
-        function formatCurrency(num) {
-            return Math.round(num).toLocaleString('zh-TW');
+        if (!role && !task && !constraint && !format) {
+            return;
         }
 
-        // 複製至剪貼簿函數 (考量 iframe 限制使用傳統方式)
-        function copyToClipboard(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.position = "fixed";  // 避免滾動頁面
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showToast();
-            } catch (err) {
-                console.error('無法複製文字: ', err);
-            }
-            document.body.removeChild(textArea);
+        let combined = "";
+        if (role) combined += `【角色】\n${role}\n\n`;
+        if (task) combined += `【任務】\n${task}\n\n`;
+        if (constraint) combined += `【限制】\n${constraint}\n\n`;
+        if (format) combined += `【呈現】\n${format}`;
+
+        const resultBox = document.getElementById('resultBox');
+        const resultSection = document.getElementById('resultSection');
+
+        resultBox.innerText = combined.trim();
+        resultSection.style.display = 'block';
+
+        // 捲動到結果區
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function copyToClipboard() {
+        const text = document.getElementById('resultBox').innerText;
+        
+        // 建立臨時 textarea 用於複製
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        
+        try {
+            document.execCommand('copy');
+            showCopyFeedback();
+        } catch (err) {
+            console.error('無法複製', err);
         }
+        
+        document.body.removeChild(textArea);
+    }
 
-        // 顯示複製成功 Toast 
-        function showToast() {
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
-        }
+    function showCopyFeedback() {
+        const status = document.getElementById('copyStatus');
+        status.classList.add('visible');
+        setTimeout(() => {
+            status.classList.remove('visible');
+        }, 2000);
+    }
+</script>
 
-        // 計算邏輯
-        function calculateROI() {
-            // 讀取輸入欄位值
-            const monthlyCasesVal = document.getElementById('monthlyCases').value;
-            const minsPerCaseVal = document.getElementById('minsPerCase').value;
-            const hourlyRateVal = document.getElementById('hourlyRate').value;
-            const currentErrorRateVal = document.getElementById('currentErrorRate').value;
-            const reworkMinsVal = document.getElementById('reworkMins').value;
-            const newErrorRateVal = document.getElementById('newErrorRate').value;
-            const monthlyToolFeeVal = document.getElementById('monthlyToolFee').value;
-            const setupHoursVal = document.getElementById('setupHours').value;
-
-            // 錯誤處理：任何欄位空白、不是有效數字、或是負數
-            if (
-                monthlyCasesVal === '' || isNaN(monthlyCasesVal) || parseFloat(monthlyCasesVal) < 0 ||
-                minsPerCaseVal === '' || isNaN(minsPerCaseVal) || parseFloat(minsPerCaseVal) < 0 ||
-                hourlyRateVal === '' || isNaN(hourlyRateVal) || parseFloat(hourlyRateVal) < 0 ||
-                currentErrorRateVal === '' || isNaN(currentErrorRateVal) || parseFloat(currentErrorRateVal) < 0 || parseFloat(currentErrorRateVal) > 100 ||
-                reworkMinsVal === '' || isNaN(reworkMinsVal) || parseFloat(reworkMinsVal) < 0 ||
-                newErrorRateVal === '' || isNaN(newErrorRateVal) || parseFloat(newErrorRateVal) < 0 || parseFloat(newErrorRateVal) > 100 ||
-                monthlyToolFeeVal === '' || isNaN(monthlyToolFeeVal) || parseFloat(monthlyToolFeeVal) < 0 ||
-                setupHoursVal === '' || isNaN(setupHoursVal) || parseFloat(setupHoursVal) < 0
-            ) {
-                // 顯示灰字錯誤提示，隱藏結果區
-                errorBox.style.display = 'block';
-                resultArea.style.display = 'none';
-                return;
-            }
-
-            // 轉成浮點數以便計算
-            const monthlyCases = parseFloat(monthlyCasesVal);
-            const minsPerCase = parseFloat(minsPerCaseVal);
-            const hourlyRate = parseFloat(hourlyRateVal);
-            const currentErrorRate = parseFloat(currentErrorRateVal);
-            const reworkMins = parseFloat(reworkMinsVal);
-            const newErrorRate = parseFloat(newErrorRateVal);
-            const monthlyToolFee = parseFloat(monthlyToolFeeVal);
-            const setupHours = parseFloat(setupHoursVal);
-
-            // ================== 運算公式 ==================
-            // 1. 每月人工成本 = 案件數 × 人工分鐘 / 60 × 時薪
-            const monthlyCost = (monthlyCases * minsPerCase) / 60 * hourlyRate;
-
-            // 2. 目前返工成本 = 案件數 × (錯誤率/100) × 返工分鐘 / 60 × 時薪
-            const currentReworkCost = monthlyCases * (currentErrorRate / 100) * reworkMins / 60 * hourlyRate;
-
-            // 3. 自動化後返工 = 案件數 × (新錯誤率/100) × 返工分鐘 / 60 × 時薪
-            const newReworkCost = monthlyCases * (newErrorRate / 100) * reworkMins / 60 * hourlyRate;
-
-            // 4. 自動化後人工複核 = 每月人工成本 × 10%
-            const auditCost = monthlyCost * 0.10;
-
-            // 5. 每月節省 = (人工成本 + 目前返工) − (自動化複核 + 自動化返工 + 工具費)
-            const monthlySavings = (monthlyCost + currentReworkCost) - (auditCost + newReworkCost + monthlyToolFee);
-
-            // 6. 回本月數 = 建置工時 × 時薪 / 每月節省
-            let paybackMonthsText = '';
-            let paybackMonths = 0;
-            if (monthlySavings > 0) {
-                paybackMonths = (setupHours * hourlyRate) / monthlySavings;
-                paybackMonthsText = `${paybackMonths.toFixed(1)} 個月`;
-            } else {
-                paybackMonthsText = '不回本';
-            }
-
-            // 7. 每月省下工時 (折算成工作天: 1 天 = 8 小時)
-            // 省下工時 = 原人工工時 + 原返工工時 - 自動化複核工時(原人工10%) - 新返工工時
-            const originalHours = (monthlyCases * minsPerCase) / 60;
-            const originalReworkHours = (monthlyCases * (currentErrorRate / 100) * reworkMins) / 60;
-            const auditHours = originalHours * 0.10;
-            const newReworkHours = (monthlyCases * (newErrorRate / 100) * reworkMins) / 60;
-
-            const netSavedHours = (originalHours + originalReworkHours) - (auditHours + newReworkHours);
-            const savedDays = netSavedHours / 8; // 折算工作天數
-
-            // ================== 渲染畫面 ==================
-            errorBox.style.display = 'none';
-            resultArea.style.display = 'block';
-
-            // 1. 每月節省 TWD 卡片
-            document.getElementById('savedCost').textContent = `TWD ${formatCurrency(monthlySavings)}`;
-            
-            // 2. 回本月數卡片
-            document.getElementById('paybackPeriod').textContent = paybackMonthsText;
-
-            // 3. 每月省下工時 (折合天數) 卡片
-            document.getElementById('savedHours').textContent = `${savedDays.toFixed(1)} 天`;
-
-            // ================== 主管摘要 & 建議判定 ==================
-            // 判定建議：
-            // - 若不回本或每月省下為負：暫緩
-            // - 若 3 個月內回本：做
-            // - 若大於 3 個月回本：待評估
-            let recommendation = '待評估';
-            if (monthlySavings <= 0) {
-                recommendation = '暫緩';
-            } else if (paybackMonths <= 3) {
-                recommendation = '做';
-            } else {
-                recommendation = '待評估';
-            }
-
-            // 組織主管摘要文本
-            const summaryString = 
-`建議 [ ${recommendation} ]：
-每月預期淨節省 ${formatCurrency(monthlySavings)} TWD（折合約 ${savedDays.toFixed(1)} 個工作天），預計 ${paybackMonthsText === '不回本' ? '不回本' : `${paybackMonths.toFixed(1)} 個月回本`}。
-
-【風險提示】
-自動化後預估錯誤率較高（${newErrorRate}% vs 目前 ${currentErrorRate}%），需配套 10% 人工抽查機制以確保品質控管。`;
-
-            // 寫入摘要區
-            document.getElementById('summaryText').textContent = summaryString;
-        }
-
-        // 綁定按鈕與事件
-        btnCalculate.addEventListener('click', calculateROI);
-        btnCopy.addEventListener('click', () => {
-            const textToCopy = document.getElementById('summaryText').textContent;
-            copyToClipboard(textToCopy);
-        });
-
-        // 初始化自動執行一次
-        window.addEventListener('DOMContentLoaded', () => {
-            calculateROI();
-        });
-    </script>
 </body>
 </html>
