@@ -3,308 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt 黃金公式組合台</title>
-    <!-- 載入 Google Fonts -->
+    <title>FlowOps 職場生產力轉化工具</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #f5f3ee;
-            --card-bg: #ffffff;
-            --border-color: #d8d4cb;
-            --primary-color: #b5703a;
-            --result-bg: #2c2b28;
-            --result-text: #f5f3ee;
-            --placeholder-color: #a09a8e;
-            --radius: 6px;
+        body { font-family: 'Inter', 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(229, 231, 235, 0.5);
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            font-family: 'Noto Sans TC', sans-serif;
-            color: #4a453e;
-            line-height: 1.6;
-            padding: 40px 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            max-width: 800px;
-            width: 100%;
-        }
-
-        h1 {
-            font-family: 'Shippori Mincho', serif;
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 40px;
-            font-size: 2.5rem;
-            letter-spacing: 0.1em;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 30px;
-        }
-
-        /* 響應式：手機版改為單欄 */
-        @media (max-width: 600px) {
-            .grid-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .label {
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #2c2b28;
-            font-size: 0.95rem;
-        }
-
-        textarea {
-            width: 100%;
-            height: 120px;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            font-family: 'Noto Sans TC', sans-serif;
-            font-size: 1rem;
-            resize: vertical;
-            transition: border-color 0.2s;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        textarea::placeholder {
-            color: var(--placeholder-color);
-            font-size: 0.9rem;
-            font-weight: 400;
-        }
-
-        .btn-container {
-            display: flex;
-            justify-content: center;
-        }
-
-        .btn-combine {
-            background-color: var(--primary-color);
+        .active-tab {
+            background-color: #3b82f6;
             color: white;
-            border: none;
-            padding: 14px 40px;
-            border-radius: var(--radius);
-            font-size: 1.1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            font-family: 'Noto Sans TC', sans-serif;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
         }
-
-        .btn-combine:hover {
-            opacity: 0.9;
+        .loading-shimmer {
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
         }
-
-        .btn-combine:active {
-            transform: translateY(1px);
-        }
-
-        .result-section {
-            display: none; /* 初始隱藏 */
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .result-title {
-            font-family: 'Shippori Mincho', serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-
-        .result-box-container {
-            position: relative;
-        }
-
-        .result-box {
-            background-color: var(--result-bg);
-            color: var(--result-text);
-            padding: 24px;
-            border-radius: var(--radius);
-            white-space: pre-wrap;
-            word-break: break-all;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.95rem;
-            min-height: 100px;
-            line-height: 1.7;
-        }
-
-        .btn-copy {
-            background-color: #4a453e;
-            color: #ffffff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-copy:hover {
-            background-color: #5e584f;
-        }
-
-        .copy-status {
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            margin-left: 10px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .copy-status.visible {
-            opacity: 1;
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen text-slate-800">
 
-<div class="container">
-    <h1>Prompt 黃金公式組合台</h1>
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-bold text-slate-900 mb-2">FlowOps 生產力轉化小工具</h1>
+            <p class="text-slate-500">將原始逐字稿、隨手筆記轉化為專業職場輸出</p>
+        </header>
 
-    <div class="card">
-        <div class="grid-layout">
-            <div class="form-group">
-                <label class="label" for="role">① 角色 (Role)</label>
-                <textarea id="role" placeholder="例如：你是一位資深的行銷顧問，擅長撰寫吸引人的社群文案..."></textarea>
-            </div>
-            <div class="form-group">
-                <label class="label" for="task">② 任務 (Task)</label>
-                <textarea id="task" placeholder="例如：請幫我針對「新款環保咖啡杯」撰寫三組 Facebook 貼文文案..."></textarea>
-            </div>
-            <div class="form-group">
-                <label class="label" for="constraint">③ 限制 (Constraint)</label>
-                <textarea id="constraint" placeholder="例如：每則不超過 200 字、語氣要親切幽默、必須包含三個表情符號..."></textarea>
-            </div>
-            <div class="form-group">
-                <label class="label" for="format">④ 呈現 (Format)</label>
-                <textarea id="format" placeholder="例如：請使用條列式呈現，並在結尾加上適當的標籤（Hashtags）..."></textarea>
-            </div>
-        </div>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar Navigation -->
+            <aside class="lg:w-1/4">
+                <nav class="space-y-2 sticky top-8">
+                    <button onclick="switchTab('minutes')" id="tab-minutes" class="w-full flex items-center p-3 rounded-xl transition-all active-tab">
+                        <span class="mr-3">📝</span> 會議紀錄轉待辦
+                    </button>
+                    <button onclick="switchTab('weekly')" id="tab-weekly" class="w-full flex items-center p-3 rounded-xl transition-all bg-white hover:bg-slate-100 border border-transparent shadow-sm">
+                        <span class="mr-3">📊</span> 週報：價值感轉化
+                    </button>
+                    <button onclick="switchTab('announcement')" id="tab-announcement" class="w-full flex items-center p-3 rounded-xl transition-all bg-white hover:bg-slate-100 border border-transparent shadow-sm">
+                        <span class="mr-3">📢</span> 功能上線公告
+                    </button>
+                    <button onclick="switchTab('followup')" id="tab-followup" class="w-full flex items-center p-3 rounded-xl transition-all bg-white hover:bg-slate-100 border border-transparent shadow-sm">
+                        <span class="mr-3">✉️</span> 客戶 Demo 跟進信
+                    </button>
+                </nav>
+            </aside>
 
-        <div class="btn-container">
-            <button class="btn-combine" onclick="combinePrompt()">組合成完整 Prompt</button>
+            <main class="lg:w-3/4">
+                <div class="glass-morphism rounded-2xl p-6 shadow-xl min-h-[600px] flex flex-col">
+                    
+                    <!-- Input Section -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <label id="input-label" class="block text-sm font-semibold text-slate-700">原始輸入 (Raw Data)</label>
+                            <button onclick="loadSample()" class="text-xs text-blue-600 hover:text-blue-800 font-medium">載入任務範例 ✨</button>
+                        </div>
+                        <textarea id="raw-input" class="w-full h-48 p-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm leading-relaxed" placeholder="請貼上原始資訊..."></textarea>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="flex justify-center mb-8">
+                        <button onclick="transform()" class="bg-slate-900 text-white px-8 py-3 rounded-full font-semibold hover:bg-slate-800 transform active:scale-95 transition-all shadow-lg flex items-center">
+                            <span>立即轉化生成</span>
+                            <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Output Section -->
+                    <div id="output-container" class="flex-grow flex flex-col hidden">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-sm font-semibold text-slate-700">轉化結果 (Optimized Output)</label>
+                            <button onclick="copyResult()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1 rounded-md transition-all">複製內容</button>
+                        </div>
+                        <div id="loading-state" class="hidden space-y-4">
+                            <div class="h-4 loading-shimmer rounded w-3/4"></div>
+                            <div class="h-4 loading-shimmer rounded w-full"></div>
+                            <div class="h-4 loading-shimmer rounded w-5/6"></div>
+                        </div>
+                        <div id="result-content" class="bg-slate-50 border border-slate-200 rounded-xl p-6 text-slate-800 whitespace-pre-wrap text-sm leading-relaxed overflow-y-auto max-h-[400px]">
+                            <!-- Result will appear here -->
+                        </div>
+                    </div>
+
+                    <!-- Placeholder -->
+                    <div id="placeholder-empty" class="flex-grow flex flex-col items-center justify-center text-slate-400 border-2 border-dashed border-slate-100 rounded-xl">
+                        <svg class="w-12 h-12 mb-2 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        <p>請點擊左側選擇模組，並在上方輸入內容</p>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
-    <div id="resultSection" class="result-section">
-        <div class="result-header">
-            <span class="result-title">組合結果</span>
-            <div style="display: flex; align-items: center;">
-                <span id="copyStatus" class="copy-status">已複製！</span>
-                <button class="btn-copy" onclick="copyToClipboard()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    複製內容
-                </button>
-            </div>
-        </div>
-        <div class="result-box-container">
-            <div id="resultBox" class="result-box"></div>
-        </div>
-    </div>
-</div>
+    <script>
+        let currentTab = 'minutes';
 
-<script>
-    function combinePrompt() {
-        const role = document.getElementById('role').value.trim();
-        const task = document.getElementById('task').value.trim();
-        const constraint = document.getElementById('constraint').value.trim();
-        const format = document.getElementById('format').value.trim();
+        const samples = {
+            minutes: `10/22 週會錄音摘要：\n「大家早，Daniel 在線上嗎？好。Mark，關於那個 v3.0 的復盤，上次說要寫 blog 對吧？Mark 說沒問題，他打算在月底前搞定。Sue 提到最近業務線索（Leads）雖然有，但質量不穩，量也需要衝上去，大家討論了一下但沒定案，Sue 說她再想想。Daniel 點名 Tom，說下個月廣告預算分配很關鍵，不能亂投，要求 Tom 去研究預算怎麼拆，下週四開會要看到提案。喔對了，Tom 記得要把競品數據放進去。先這樣，散會。」`,
+            weekly: `本週筆記：\nMon-Tue: 都在趕 FlowOps v3.0 的受眾套件，總共生出 4 個版本，測過標題點擊率了。\nWed: 早上跟 Daniel 碰面，他想要把文書作業模板化，說是要傳承經驗，我先把清單列出來了。\nThu: 看了 5 家競品的內容，發現他們都在推 AI 代理人功能，我們這塊還在追。\nFri: 陪業務去 ABC 公司 demo，客戶一直問 KYC 自動化，我負責在旁邊做觀察紀錄。\n卡點： 模板化的細節很多，擔心其他同事的使用門檻太高。\n下週計畫： 把模板寫完、跟 Daniel 對一次公告內容。`,
+            announcement: `產品團隊傳來的 Release Note：\n版本號： FlowOps v3.0 (Internal Code: Phoenix)\n方案調整： Growth 方案定價 $799/mo，Token 額度提升至 50,000。\n內部福利： 員工專屬，只要輸入公司 Email 結尾，前 30 天 0 元試用。\n路徑： 內網 flowops-trial 頁面點擊啟動。\n回饋渠道： 產品問題找 Daniel；帳號權限或 Bug 寄給 product@yunliu.com。\n活動截止： 2026/11/30 23:59。\n備註： 這版優化了 40% 的生成速度，對業務端報價非常有幫助。`,
+            followup: `ABC 公司 Demo 紀錄摘要：\n對象： 行銷總監 (Marketing Director)\n核心痛點： 他們目前手動處理大量 KYC 很慢，想要自動化，這是他們的 Top Priority。\n價格異議： 看到 Growth 方案 $799 時，總監挑了一下眉毛，說「再評估」。\n關鍵線索： 他們現在用 Zapier 接 AI，但每個月 Token 費用噴太快，預算已經超標了。\n策略： 我們需要證明 FlowOps 內建的 Token 包比他們自接 Zapier 更省錢。\nNext Step: 下週四下午三點已經約好第二次會，要帶成本對比表過去。`
+        };
 
-        if (!role && !task && !constraint && !format) {
-            return;
+        function switchTab(tab) {
+            currentTab = tab;
+            // Update UI
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('bg-white', 'hover:bg-slate-100');
+            });
+            document.getElementById(`tab-${tab}`).classList.add('active-tab');
+            document.getElementById(`tab-${tab}`).classList.remove('bg-white', 'hover:bg-slate-100');
+            
+            // Clear or update label
+            const labels = {
+                minutes: "原始會議逐字稿",
+                weekly: "本週工作筆記 (Daily Log)",
+                announcement: "產品規格初稿 (Feature Spec)",
+                followup: "Demo 側錄重點 (Demo Insights)"
+            };
+            document.getElementById('input-label').textContent = labels[tab];
+            document.getElementById('raw-input').value = "";
+            document.getElementById('output-container').classList.add('hidden');
+            document.getElementById('placeholder-empty').classList.remove('hidden');
         }
 
-        let combined = "";
-        if (role) combined += `【角色】\n${role}\n\n`;
-        if (task) combined += `【任務】\n${task}\n\n`;
-        if (constraint) combined += `【限制】\n${constraint}\n\n`;
-        if (format) combined += `【呈現】\n${format}`;
+        function loadSample() {
+            document.getElementById('raw-input').value = samples[currentTab];
+        }
 
-        const resultBox = document.getElementById('resultBox');
-        const resultSection = document.getElementById('resultSection');
+        function transform() {
+            const input = document.getElementById('raw-input').value;
+            if (!input.trim()) {
+                showToast("請先輸入內容或載入範例");
+                return;
+            }
 
-        resultBox.innerText = combined.trim();
-        resultSection.style.display = 'block';
+            document.getElementById('placeholder-empty').classList.add('hidden');
+            document.getElementById('output-container').classList.remove('hidden');
+            document.getElementById('loading-state').classList.remove('hidden');
+            document.getElementById('result-content').classList.add('hidden');
 
-        // 捲動到結果區
-        resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+            // Simulate "Processing" time
+            setTimeout(() => {
+                let result = "";
+                switch(currentTab) {
+                    case 'minutes': result = processMinutes(input); break;
+                    case 'weekly': result = processWeekly(input); break;
+                    case 'announcement': result = processAnnouncement(input); break;
+                    case 'followup': result = processFollowup(input); break;
+                }
+                
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('result-content').classList.remove('hidden');
+                document.getElementById('result-content').innerHTML = result;
+            }, 800);
+        }
 
-    function copyToClipboard() {
-        const text = document.getElementById('resultBox').innerText;
-        
-        // 建立臨時 textarea 用於複製
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        
-        try {
+        function processMinutes(raw) {
+            return `<div class="font-bold text-blue-700 mb-2">📋 10/22 週會待辦追蹤</div>` +
+                   `<div class="space-y-3">` +
+                   `<div><strong class="text-slate-900">1. [內容營銷] v3.0 復盤部落格文章</strong><br><span class="text-slate-500">負責人：Mark | 期限：10/31 前</span></div>` +
+                   `<div><strong class="text-slate-900">2. [業務開發] 高質量 Leads 獲取方案優化</strong><br><span class="text-slate-500">負責人：Sue | 狀態：構思中</span></div>` +
+                   `<div><strong class="text-slate-900">3. [行銷預算] 下月廣告預算分配提案 (需包含競品數據)</strong><br><span class="text-slate-500">負責人：Tom | 期限：下週四開會提案</span></div>` +
+                   `</div>`;
+        }
+
+        function processWeekly(raw) {
+            return `<div class="font-bold text-green-700 mb-2">🚀 本週工作成果報告 (10/21-10/25)</div>` +
+                   `<div class="space-y-4">` +
+                   `<div><h4 class="font-semibold border-b">✨ 核心成就 (Value Delivered)</h4>` +
+                   `<ul class="list-disc ml-5 mt-1">` +
+                   `<li>成功交付 FlowOps v3.0 受眾套件，完成 4 次版本迭代並通過點擊率測試。</li>` +
+                   `<li>啟動「組織知識傳承」計劃，完成首批文書作業模板清單。</li>` +
+                   `<li>完成 5 家競品「AI 代理人」功能調研，提供產品迭代方向參考。</li>` +
+                   `</ul></div>` +
+                   `<div><h4 class="font-semibold border-b text-orange-600">⚠️ 風險與挑戰 (Blockers)</h4>` +
+                   `<p class="mt-1 italic">模板化細節繁瑣，需考慮如何簡化 UI 以降低其他部門同事的使用門檻。</p></div>` +
+                   `<div><h4 class="font-semibold border-b">📅 下週計畫</h4>` +
+                   `<p class="mt-1">完成模板文件撰寫，並與 Daniel 確認全公司公告時程。</p></div>` +
+                   `</div>`;
+        }
+
+        function processAnnouncement(raw) {
+            return `<div class="bg-blue-600 text-white p-4 rounded-lg mb-4 text-center font-bold">🎉 全新升級：FlowOps v3.0 「鳳凰」版正式釋出！</div>` +
+                   `<div class="space-y-3">` +
+                   `<p>各位雲流夥伴，本週我們迎來了重大的技術突破！</p>` +
+                   `<p><strong>🚀 生成速度提升 40%：</strong> 這將直接轉化為更強大的業務競爭力，讓報價流程更流暢。</p>` +
+                   `<p><strong>💎 方案升級：</strong> Growth 方案現在包含 50,000 Tokens (定價 $799/mo)，更具市場吸引力。</p>` +
+                   `<p><strong>🎁 員工限定福利：</strong> 即日起至 11/30，輸入公司 Email 即可享有前 30 天 0 元試用。</p>` +
+                   `<div class="bg-slate-100 p-3 rounded-lg text-xs">` +
+                   `📍 立即試用：內網 flowops-trial 頁面<br>` +
+                   `📩 技術回饋：product@yunliu.com (Bug/權限)` +
+                   `</div></div>`;
+        }
+
+        function processFollowup(raw) {
+            return `<div class="border-l-4 border-blue-500 pl-4 py-1 mb-4">` +
+                   `<span class="text-slate-400 text-xs">Subject: FlowOps | ABC 公司 KYC 自動化方案討論預約</span></div>` +
+                   `<p class="mb-4">您好，感謝您昨日撥冗參加 Demo。</p>` +
+                   `<p class="mb-2">在會議中，我注意到貴司目前在處理 <strong>大量 KYC 流程</strong> 時面臨顯著的手動負擔，且 <strong>Zapier 的 Token 費用成本</strong> 已超出預期。這正是 FlowOps v3.0 的核心價值所在。</p>` +
+                   `<p class="mb-4">我們能為貴司提供比 Zapier 更具成本效益的「內建式 Token 包」方案，大幅降低營運開銷。</p>` +
+                   `<div class="bg-blue-50 p-3 rounded mb-4">` +
+                   `📅 <strong>下週四 下午 15:00</strong><br>` +
+                   `我將為您準備一份專屬的 <strong>「Zapier vs FlowOps 成本效益對比表」</strong>，期待再次討論。</div>` +
+                   `<p>Best Regards,<br>FlowOps Team</p>`;
+        }
+
+        function copyResult() {
+            const content = document.getElementById('result-content').innerText;
+            const el = document.createElement('textarea');
+            el.value = content;
+            document.body.appendChild(el);
+            el.select();
             document.execCommand('copy');
-            showCopyFeedback();
-        } catch (err) {
-            console.error('無法複製', err);
+            document.body.removeChild(el);
+            showToast("內容已複製到剪貼簿！");
         }
-        
-        document.body.removeChild(textArea);
-    }
 
-    function showCopyFeedback() {
-        const status = document.getElementById('copyStatus');
-        status.classList.add('visible');
-        setTimeout(() => {
-            status.classList.remove('visible');
-        }, 2000);
-    }
-</script>
-
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-2 rounded-full shadow-2xl text-sm transition-all animate-bounce";
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+    </script>
 </body>
 </html>
